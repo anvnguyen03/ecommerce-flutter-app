@@ -7,7 +7,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SplashScreenView(
       navigateRoute: OnBoardingScreen(),
-      duration: 10000, // 10 giây
+      duration: 3000, // 10 giây
       text: "Nguyen Viet An - 21110118\n Tran Viet Trung - 21110859",
       textType: TextType.ColorizeAnimationText,
       textStyle: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),

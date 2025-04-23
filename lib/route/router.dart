@@ -86,10 +86,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const PasswordRecoveryScreen(),
       );
-    // case verificationMethodScreenRoute:
-    //   return MaterialPageRoute(
-    //     builder: (context) => const VerificationMethodScreen(),
-    //   );
+    case otpVerificationScreenRoute:
+        final args = settings.arguments as String?;
+        return MaterialPageRoute(
+          builder: (_) => OTPVerificationScreen(email: args ?? ''),
+        );
+    case setNewPasswordScreenRoute:
+        final args = settings.arguments as String?;
+        debugPrint("Navigating to SetNewPasswordScreen with email: $args");
+        return MaterialPageRoute(
+          builder: (_) => SetNewPasswordScreen(email: args ?? ''),
+        );
     // case otpScreenRoute:
     //   return MaterialPageRoute(
     //     builder: (context) => const OtpScreen(),

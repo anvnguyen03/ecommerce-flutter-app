@@ -58,3 +58,5 @@ const String cartScreenRoute = "cart";
 const String paymentMethodScreenRoute = "payment_method";
 const String addNewCardScreenRoute = "add_new_card";
 const String thanksForOrderScreenRoute = "thanks_order";
+const String otpVerificationScreenRoute = 'otp-verification';
+const String setNewPasswordScreenRoute = 'set-new-password';

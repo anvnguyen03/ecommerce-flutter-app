@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shop/constants.dart';
 import 'package:shop/route/route_constants.dart';
-
 import 'components/login_form.dart';
+import 'api_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +38,46 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: defaultPadding / 2),
                   const Text(
-                    "Log in with your data that you intered during your registration.",
+                    "Log in with your data that you entered during your registration.",
                   ),
                   const SizedBox(height: defaultPadding),
-                  LogInForm(formKey: _formKey),
+                  LogInForm(
+                    formKey: _formKey,
+                    onLogin: (email, password) async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      try {
+                        final token = await ApiService.login(email, password);
+                        if (token != null && context.mounted) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            entryPointScreenRoute,
+                            ModalRoute.withName(logInScreenRoute),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Login failed")),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Error: $e")),
+                          );
+                        }
+                      } finally {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    },
+                  ),
                   Align(
                     child: TextButton(
                       child: const Text("Forgot password"),
                       onPressed: () {
-                        Navigator.pushNamed(
-                            context, passwordRecoveryScreenRoute);
+                        Navigator.pushNamed(context, passwordRecoveryScreenRoute);
                       },
                     ),
                   ),
@@ -54,17 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: size.height > 700
                         ? size.height * 0.1
                         : defaultPadding,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            entryPointScreenRoute,
-                            ModalRoute.withName(logInScreenRoute));
-                      }
-                    },
-                    child: const Text("Log in"),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
